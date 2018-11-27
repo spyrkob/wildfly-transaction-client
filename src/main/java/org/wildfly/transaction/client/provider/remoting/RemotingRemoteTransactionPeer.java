@@ -80,7 +80,8 @@ class RemotingRemoteTransactionPeer implements RemoteTransactionPeer {
         }
         AuthenticationConfiguration finalAuthenticationConfiguration;
         if (authenticationConfiguration == null) {
-            finalAuthenticationConfiguration = CLIENT.getAuthenticationConfiguration(location, AuthenticationContext.captureCurrent(), -1, "jta", "jboss");
+            AuthenticationContext ac = AuthenticationContext.getContextManager().getClassLoaderDefault(Thread.currentThread().getContextClassLoader());
+            finalAuthenticationConfiguration = CLIENT.getAuthenticationConfiguration(location, AuthenticationContext.captureCurrent().with(ac), -1, "jta", "jboss");
         } else {
             finalAuthenticationConfiguration = authenticationConfiguration;
         }
