@@ -29,6 +29,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.security.PrivilegedAction;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.Collections;
@@ -295,9 +296,15 @@ final class FileSystemXAResourceRegistry {
                         if (fileChannel != null) {
                             fileChannel.close();
                         }
-                        Files.delete(filePath);
+                        doPrivileged(new PrivilegedExceptionAction<Void>() {
+                            @Override
+                            public Void run() throws IOException {
+                                Files.delete(filePath);
+                                return null;
+                            }
+                        });
                         openFilePaths.remove(filePath.getFileName().toString());
-                    } catch (IOException e) {
+                    } catch (IOException | PrivilegedActionException e) {
                         throw Log.log.deleteXAResourceRecoveryFileFailed(XAException.XAER_RMERR, filePath, resource, e);
                     }
                     Log.log.xaResourceRecoveryFileDeleted(filePath);

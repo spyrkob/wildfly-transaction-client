@@ -395,7 +395,7 @@ public interface Log extends BasicLogger {
     SystemException appendXAResourceRecoveryFileFailed(URI uri, Path filePath, @Cause IOException e);
 
     @Message(id = 93, value = "Failed to delete xa recovery registry file %s on removal of %s")
-    XAException deleteXAResourceRecoveryFileFailed(@Field int errorCode, Path filePath, XAResource resource, @Cause IOException e);
+    XAException deleteXAResourceRecoveryFileFailed(@Field int errorCode, Path filePath, XAResource resource, @Cause Exception e);
 
     @Message(id = 94, value = "Failed to read xa resource recovery file %s")
     IOException readXAResourceRecoveryFileFailed(Path filePath, @Cause IOException e);
